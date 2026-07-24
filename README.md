@@ -1,63 +1,166 @@
 # 🛒 E-Commerce Microservices Backend
 
-A production-inspired **Spring Boot Microservices** application demonstrating enterprise backend architecture using **Spring Cloud**, **Netflix Eureka**, **Spring Cloud Gateway**, **OpenFeign**, **Resilience4j**, and **PostgreSQL**.
+<div align="center">
 
-The project simulates an E-Commerce platform where multiple independent microservices communicate with each other through service discovery and API Gateway.
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-brightgreen)
+![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+![Maven](https://img.shields.io/badge/Maven-Build-red)
+![License](https://img.shields.io/badge/License-MIT-success)
 
-> 🚀 Built to learn real-world distributed systems, scalable backend architecture, and production-ready Spring Boot development.
+A production-inspired **Spring Boot Microservices** application built to understand enterprise backend architecture using **Spring Cloud**, **Netflix Eureka**, **Spring Cloud Gateway**, **OpenFeign**, **Resilience4j**, and **PostgreSQL**.
+
+</div>
+
+---
+
+# 📖 Table of Contents
+
+- Overview
+- Features
+- Architecture
+- Tech Stack
+- Project Structure
+- Services
+- API Gateway
+- Eureka Discovery
+- Order Service
+- Inventory Service
+- Request Flow
+- API Documentation
+- Gateway Filters
+- JWT Infrastructure
+- Resilience4j
+- Database
+- Running the Project
+- Testing
+- Screenshots
+- Future Roadmap
+- Docker
+- Kubernetes
+- AWS
+- CI/CD
+- Learning Outcomes
+
+---
+
+# 🚀 Overview
+
+This project demonstrates how modern backend systems are designed using **Microservices Architecture**.
+
+Instead of building a single monolithic application, the system is divided into multiple independent services communicating through REST APIs using **OpenFeign** and discovered dynamically using **Netflix Eureka**.
+
+An **API Gateway** acts as the single entry point for all client requests, providing routing, load balancing, centralized logging, and authentication.
+
+The project focuses on learning production-ready backend concepts such as
+
+- Microservices
+- Distributed Systems
+- Service Discovery
+- API Gateway
+- Gateway Filters
+- JWT Infrastructure
+- Client-side Load Balancing
+- Circuit Breaker
+- Layered Architecture
+- REST APIs
 
 ---
 
 # ✨ Features
 
-- ✅ Microservices Architecture
-- ✅ Spring Cloud Gateway
-- ✅ Netflix Eureka Service Discovery
-- ✅ Spring Cloud LoadBalancer
-- ✅ OpenFeign Inter-Service Communication
-- ✅ Resilience4j Circuit Breaker
-- ✅ Order Service
-- ✅ Inventory Service
-- ✅ REST APIs
-- ✅ Spring Data JPA
-- ✅ Hibernate ORM
-- ✅ PostgreSQL
-- ✅ DTO Mapping
-- ✅ ModelMapper
+## Microservices
+
+- ✅ Independent Services
+- ✅ Service-to-Service Communication
+- ✅ Independent Databases
 - ✅ Layered Architecture
-- ✅ Automatic Database Initialization
-- ✅ Inventory Stock Management
-- ✅ Total Price Calculation
-- ✅ Maven Multi-Service Setup
 
 ---
 
-# 🏗️ Architecture
+## Spring Cloud
+
+- ✅ Netflix Eureka Discovery Server
+- ✅ Eureka Client Registration
+- ✅ Spring Cloud Gateway
+- ✅ Spring Cloud LoadBalancer
+- ✅ OpenFeign
+
+---
+
+## API Gateway
+
+- ✅ Centralized Routing
+- ✅ Single Entry Point
+- ✅ Global Gateway Filter
+- ✅ Route Specific Filter
+- ✅ Authentication Gateway Filter
+- ✅ JWT Infrastructure
+- ✅ Logging
+
+---
+
+## Backend
+
+- ✅ Spring Boot 3.5
+- ✅ Java 21
+- ✅ Spring Data JPA
+- ✅ Hibernate
+- ✅ DTO Pattern
+- ✅ ModelMapper
+- ✅ PostgreSQL
+
+---
+
+## Resilience
+
+- ✅ Resilience4j Setup
+- ✅ Circuit Breaker Ready
+
+---
+
+## Database
+
+- ✅ PostgreSQL
+- ✅ Automatic Initialization
+- ✅ data.sql
+- ✅ Hibernate ORM
+
+---
+
+# 🏗️ System Architecture
 
 ```text
-                           Client
-                              │
-                              ▼
-                   Spring Cloud Gateway
-                              │
-                              ▼
-                    Eureka Discovery Server
-                              │
-                ┌─────────────┴─────────────┐
-                ▼                           ▼
-         Order Service               Inventory Service
-                │                           │
-                │      OpenFeign            │
-                └────────────►──────────────┘
-                              │
-                    Spring Cloud LoadBalancer
-                              │
-                    PostgreSQL Databases
+                                Client
+                                   │
+                                   ▼
+                      Spring Cloud API Gateway
+                                   │
+        ┌──────────────────────────┼──────────────────────────┐
+        │                          │                          │
+        ▼                          ▼                          ▼
+ Global Logging            Authentication              Route Filter
+      Filter                    Filter
+
+                                   │
+                                   ▼
+                     Netflix Eureka Discovery Server
+                                   │
+              ┌────────────────────┴────────────────────┐
+              ▼                                         ▼
+      Order Service                           Inventory Service
+              │                                         │
+              │----------- OpenFeign ------------------>│
+              │                                         │
+              ▼                                         ▼
+        Order Database                         Inventory Database
+            PostgreSQL                             PostgreSQL
 ```
 
 ---
 
-# 🛠️ Tech Stack
+# ⚙️ Technology Stack
 
 | Technology | Purpose |
 |------------|---------|
@@ -67,14 +170,14 @@ The project simulates an E-Commerce platform where multiple independent microser
 | Spring Cloud Gateway | API Gateway |
 | Netflix Eureka | Service Discovery |
 | OpenFeign | Inter-Service Communication |
-| Spring Cloud LoadBalancer | Client-side Load Balancing |
+| Spring Cloud LoadBalancer | Load Balancing |
 | Resilience4j | Circuit Breaker |
 | Spring Data JPA | ORM |
-| Hibernate | ORM Implementation |
+| Hibernate | ORM |
 | PostgreSQL | Database |
 | Maven | Dependency Management |
-| ModelMapper | DTO Mapping |
 | Lombok | Boilerplate Reduction |
+| ModelMapper | DTO Mapping |
 | REST APIs | Communication |
 
 ---
@@ -85,28 +188,87 @@ The project simulates an E-Commerce platform where multiple independent microser
 ecommerce-microservices
 │
 ├── api-gateway
+│   ├── filters
+│   │     ├── GlobalLoggingFilter
+│   │     ├── LoggingOrdersFilter
+│   │     └── AuthenticationGatewayFilterFactory
+│   │
+│   ├── service
+│   │     └── JwtService
+│   │
+│   └── application.properties
 │
 ├── discovery-service
 │
+│   ├── Eureka Server
+│   └── Service Registry
+│
 ├── inventory-service
 │
+│   ├── Controller
+│   ├── Service
+│   ├── Repository
+│   ├── Entity
+│   ├── DTO
+│   ├── OpenFeign Client
+│   └── PostgreSQL
+│
 ├── order-service
+│
+│   ├── Controller
+│   ├── Service
+│   ├── Repository
+│   ├── Entity
+│   ├── DTO
+│   ├── OpenFeign Client
+│   └── PostgreSQL
 │
 └── README.md
 ```
 
 ---
 
+# 🎯 Objectives
+
+This project was built to understand
+
+- Enterprise Backend Development
+- Distributed Systems
+- Spring Cloud Ecosystem
+- API Gateway
+- Service Discovery
+- Client-side Load Balancing
+- OpenFeign Communication
+- Circuit Breaker Pattern
+- JWT Authentication
+- Docker
+- Kubernetes
+- AWS Deployment
+
 # 🚀 Microservices
 
-## 🌐 API Gateway
+This project follows a **Microservices Architecture**, where every service has its own responsibility and database.
 
-### Responsibilities
+The services communicate with each other through **Spring Cloud OpenFeign**, while service discovery is handled using **Netflix Eureka**.
+
+---
+
+# 🌐 API Gateway
+
+The API Gateway is the **single entry point** of the entire system.
+
+Instead of exposing individual microservices to clients, every request first reaches the API Gateway.
+
+Responsibilities
 
 - Centralized Routing
-- Single Entry Point
+- Service Discovery
+- Client Request Forwarding
 - Load Balancing
-- Service Discovery Integration
+- Global Request Logging
+- Route Specific Logging
+- Authentication Filter
+- JWT Validation (Infrastructure)
 
 Port
 
@@ -116,13 +278,56 @@ Port
 
 ---
 
-## 🔍 Discovery Service
+## API Gateway Flow
 
-### Responsibilities
+```text
+Client
 
-- Service Registry
+↓
+
+API Gateway
+
+↓
+
+Authentication Filter
+
+↓
+
+Global Logging Filter
+
+↓
+
+Route Filter
+
+↓
+
+Requested Service
+```
+
+---
+
+# 🔍 Discovery Service
+
+Netflix Eureka acts as the **Service Registry**.
+
+Every microservice registers itself automatically after startup.
+
+Instead of hardcoding URLs, services communicate using their service names.
+
+Example
+
+```
+lb://ORDER-SERVICE
+
+lb://INVENTORY-SERVICE
+```
+
+Responsibilities
+
+- Service Registration
 - Service Discovery
-- Dynamic Instance Registration
+- Dynamic Instance Management
+- Health Monitoring
 
 Port
 
@@ -138,14 +343,22 @@ http://localhost:8761
 
 ---
 
-## 📦 Inventory Service
+# 📦 Inventory Service
 
-### Responsibilities
+The Inventory Service manages products and stock availability.
+
+Responsibilities
 
 - Product Management
 - Inventory Management
-- Reduce Product Stocks
-- Calculate Total Price
+- Reduce Product Stock
+- Calculate Order Price
+
+Database
+
+```
+inventoryDB
+```
 
 Port
 
@@ -153,25 +366,35 @@ Port
 9010
 ```
 
-Endpoints
+---
 
-| Method | Endpoint |
-|---------|----------|
-| GET | `/api/v1/products` |
-| GET | `/api/v1/products/{id}` |
-| PUT | `/api/v1/products/reduce-stocks` |
-| GET | `/api/v1/products/fetchOrders` |
+## Inventory Endpoints
+
+| Method | Endpoint | Description |
+|----------|----------------------------|------------------------|
+| GET | /api/v1/products | Fetch All Products |
+| GET | /api/v1/products/{id} | Fetch Product |
+| PUT | /api/v1/products/reduce-stocks | Reduce Stock |
+| GET | /api/v1/products/fetchOrders | OpenFeign Demo |
 
 ---
 
-## 📦 Order Service
+# 📦 Order Service
 
-### Responsibilities
+Order Service handles customer orders.
+
+Responsibilities
 
 - Create Orders
-- Persist Orders
+- Store Orders
 - Call Inventory Service
-- Store Order Details
+- Persist Order Items
+
+Database
+
+```
+orderDB
+```
 
 Port
 
@@ -179,29 +402,47 @@ Port
 9020
 ```
 
-Endpoints
+---
 
-| Method | Endpoint |
-|---------|----------|
-| GET | `/orders/core/helloOrders` |
-| POST | `/orders/core/create-order` |
-| GET | `/orders/core` |
-| GET | `/orders/core/{id}` |
+## Order Endpoints
+
+| Method | Endpoint | Description |
+|----------|-----------------------------|-------------------|
+| GET | /orders/core | Fetch Orders |
+| GET | /orders/core/{id} | Fetch Order |
+| POST | /orders/core/create-order | Create Order |
+| GET | /orders/core/helloOrders | OpenFeign Demo |
 
 ---
 
-# 🔄 Request Flow
+# 🔄 Complete Request Flow
 
 ```text
 Client
 
 ↓
 
-Spring Cloud Gateway
+API Gateway
 
 ↓
 
-Eureka Discovery Server
+Authentication Filter
+
+↓
+
+Global Logging Filter
+
+↓
+
+Route Logging Filter
+
+↓
+
+Netflix Eureka
+
+↓
+
+Spring Cloud LoadBalancer
 
 ↓
 
@@ -209,11 +450,7 @@ Order Service
 
 ↓
 
-OpenFeign Client
-
-↓
-
-LoadBalancer
+OpenFeign
 
 ↓
 
@@ -221,19 +458,19 @@ Inventory Service
 
 ↓
 
-Reduce Stocks
+PostgreSQL
 
 ↓
 
-Calculate Total Price
+Inventory Response
 
 ↓
 
-Return Total Price
+Order Service
 
 ↓
 
-Persist Order
+Save Order
 
 ↓
 
@@ -246,7 +483,476 @@ Client
 
 ---
 
-# 📌 Sample Request
+# 📡 OpenFeign Communication
+
+Order Service never communicates directly using URLs.
+
+Instead it uses
+
+```java
+@FeignClient(name = "inventory-service")
+```
+
+Spring Cloud automatically
+
+- discovers Inventory Service
+- selects healthy instance
+- performs load balancing
+- sends HTTP request
+
+Architecture
+
+```text
+Order Service
+
+↓
+
+OpenFeign
+
+↓
+
+LoadBalancer
+
+↓
+
+Inventory Service
+```
+
+---
+
+# ⚖️ Spring Cloud LoadBalancer
+
+LoadBalancer distributes requests among available service instances.
+
+Example
+
+```text
+Inventory Instance 1
+
+Inventory Instance 2
+
+Inventory Instance 3
+
+↓
+
+LoadBalancer
+
+↓
+
+Automatic Routing
+```
+
+Current Project
+
+```text
+Client
+
+↓
+
+Gateway
+
+↓
+
+lb://ORDER-SERVICE
+
+↓
+
+lb://INVENTORY-SERVICE
+```
+
+---
+
+# 📋 Sample Create Order Request
+
+```json
+{
+    "items": [
+        {
+            "productId": 1,
+            "quantity": 2
+        },
+        {
+            "productId": 2,
+            "quantity": 3
+        }
+    ]
+}
+```
+
+---
+
+# 📋 Sample Response
+
+```json
+{
+    "id": 1,
+    "items": [
+        {
+            "id": 1,
+            "productId": 1,
+            "quantity": 2
+        },
+        {
+            "id": 2,
+            "productId": 2,
+            "quantity": 3
+        }
+    ],
+    "totalPrice": 5299.95
+}
+```
+
+---
+
+# 📊 Sequence Diagram
+
+```text
+Client
+   │
+   ▼
+API Gateway
+   │
+   ▼
+Authentication Filter
+   │
+   ▼
+Global Logging Filter
+   │
+   ▼
+Order Service
+   │
+   ▼
+OpenFeign Client
+   │
+   ▼
+Inventory Service
+   │
+   ▼
+PostgreSQL
+   │
+   ▼
+Inventory Response
+   │
+   ▼
+Order Service
+   │
+   ▼
+Persist Order
+   │
+   ▼
+Gateway
+   │
+   ▼
+Client
+```
+
+---
+
+# 💡 Design Principles Used
+
+- Single Responsibility Principle
+- Layered Architecture
+- DTO Pattern
+- Repository Pattern
+- Dependency Injection
+- Interface-Based Design
+- Loose Coupling
+- Separation of Concerns
+
+---
+
+# 📈 Current Architecture Level
+
+✅ REST APIs
+
+✅ Layered Architecture
+
+✅ PostgreSQL
+
+✅ DTO Mapping
+
+✅ OpenFeign
+
+✅ Service Discovery
+
+✅ API Gateway
+
+✅ Spring Cloud LoadBalancer
+
+✅ Distributed Communication
+
+✅ Production-style Routing
+
+---# 🛡️ API Gateway Filters
+
+One of the major advantages of using **Spring Cloud Gateway** is the ability to intercept every request before it reaches the microservices.
+
+The gateway is responsible for
+
+- Logging
+- Authentication
+- Authorization
+- Request Validation
+- Rate Limiting
+- Routing
+- Monitoring
+
+This project currently implements multiple gateway filters.
+
+---
+
+# 🌍 Global Logging Filter
+
+The Global Logging Filter executes for **every incoming request** passing through the API Gateway.
+
+Responsibilities
+
+- Log HTTP Method
+- Log Request URI
+- Log Response Status
+- Measure Request Processing Time
+- Centralized Request Monitoring
+
+Flow
+
+```text
+Client
+
+↓
+
+Gateway
+
+↓
+
+Global Logging Filter
+
+↓
+
+Requested Service
+```
+
+Example Log
+
+```text
+Incoming Request
+
+Method : POST
+
+URI : /orders/core/create-order
+
+Response Status : 200 OK
+
+Execution Time : 43 ms
+```
+
+---
+
+# 📌 Route Specific Logging Filter
+
+Unlike Global Filters, Route Filters execute only for specific routes.
+
+Current Implementation
+
+```
+/orders/**
+```
+
+Responsibilities
+
+- Log Order APIs
+- Capture Order Requests
+- Monitor Order Traffic
+- Debug Specific Services
+
+Flow
+
+```text
+Client
+
+↓
+
+Gateway
+
+↓
+
+Order Route Filter
+
+↓
+
+Order Service
+```
+
+Example
+
+```text
+POST
+
+/orders/core/create-order
+
+↓
+
+LoggingOrdersFilter
+
+↓
+
+Order Service
+```
+
+---
+
+# 🔐 Authentication Gateway Filter
+
+The Authentication Filter is responsible for validating every protected request before forwarding it to the backend service.
+
+Current Responsibilities
+
+- Check Authorization Header
+- Validate Bearer Token Format
+- Reject Unauthorized Requests
+
+Future Responsibilities
+
+- JWT Validation
+- Role Validation
+- Token Expiration Check
+- User Authentication
+
+Current Flow
+
+```text
+Client
+
+↓
+
+Authorization Header
+
+↓
+
+Gateway
+
+↓
+
+Authentication Filter
+
+↓
+
+Order Service
+```
+
+---
+
+# 🔑 JWT Infrastructure
+
+The project already contains the initial JWT infrastructure.
+
+Current Implementation
+
+- JWT Service
+- Token Validation Logic
+- Claims Extraction
+- Username Extraction
+
+Upcoming
+
+- Token Generation
+- Refresh Token
+- Expiration Validation
+- Role Extraction
+- Spring Security Integration
+
+JWT Flow
+
+```text
+Client
+
+↓
+
+Bearer Token
+
+↓
+
+Gateway
+
+↓
+
+JWT Service
+
+↓
+
+Extract Claims
+
+↓
+
+Validate Token
+
+↓
+
+Forward Request
+```
+
+---
+
+# ❤️ Resilience4j
+
+Resilience4j is added to make the microservices fault tolerant.
+
+Current Status
+
+- Dependency Added
+- Integration Ready
+
+Upcoming Features
+
+- Circuit Breaker
+- Retry
+- Time Limiter
+- Rate Limiter
+- Bulkhead
+- Fallback APIs
+
+Future Flow
+
+```text
+Gateway
+
+↓
+
+Order Service
+
+↓
+
+Circuit Breaker
+
+↓
+
+Inventory Service
+
+↓
+
+Fallback
+```
+
+---
+
+# 🧪 API Testing
+
+The application has been tested using **Postman**.
+
+## Fetch Products
+
+```http
+GET http://localhost:8080/api/v1/products
+```
+
+---
+
+## Create Order
+
+```http
+POST http://localhost:8080/orders/core/create-order
+```
+
+Request Body
 
 ```json
 {
@@ -265,49 +971,60 @@ Client
 
 ---
 
-# 📌 Sample Response
+## Fetch Orders
 
-```json
-{
-  "id": 1,
-  "items": [
-    {
-      "id": 1,
-      "productId": 1,
-      "quantity": 2
-    },
-    {
-      "id": 2,
-      "productId": 2,
-      "quantity": 3
-    }
-  ],
-  "totalPrice": 5299.95
-}
+```http
+GET http://localhost:8080/orders/core
 ```
 
 ---
 
-# ⚙️ Getting Started
+# ⚙️ Running the Project
 
-## Clone Repository
+Start services in the following order
 
-```bash
-git clone https://github.com/VISHAL55UIET/ecommerce-microservices.git
+```
+1. Discovery Service
+
+↓
+
+2. Inventory Service
+
+↓
+
+3. Order Service
+
+↓
+
+4. API Gateway
 ```
 
 ---
 
-## Configure PostgreSQL
+# 🌐 Service URLs
 
-Create databases
+| Service | Port |
+|----------|------|
+| Eureka Server | 8761 |
+| API Gateway | 8080 |
+| Inventory Service | 9010 |
+| Order Service | 9020 |
+
+---
+
+# 🗄️ Database Configuration
+
+The project uses **PostgreSQL**.
+
+Create two databases.
 
 ```
 inventoryDB
+
 orderDB
 ```
 
-Update the database credentials inside
+Update database credentials inside
 
 ```
 application.properties
@@ -315,168 +1032,592 @@ application.properties
 
 ---
 
-# ▶️ Run Services
+# 📊 Logging
 
-Start the services in the following order:
+Logging is enabled throughout the application.
 
-1. Discovery Service
-2. Inventory Service
-3. Order Service
-4. API Gateway
+The gateway logs
 
----
+- Request Method
+- Request URI
+- Response Status
+- Processing Time
 
-# 🌐 Service URLs
+This helps during
 
-| Service | URL |
-|----------|-----|
-| Eureka Dashboard | http://localhost:8761 |
-| API Gateway | http://localhost:8080 |
-| Inventory Service | http://localhost:9010 |
-| Order Service | http://localhost:9020 |
+- Debugging
+- Monitoring
+- Production Support
 
 ---
 
-# 📸 Testing
+# 🧩 Configuration
 
-## Fetch Products
+Each microservice has its own
 
-```
-GET http://localhost:8080/api/v1/products
-```
+- application.properties
+- Database
+- Controller Layer
+- Service Layer
+- Repository Layer
+- DTO Layer
 
----
-
-## Create Order
-
-```
-POST http://localhost:8080/orders/core/create-order
-```
+The API Gateway manages routing and service discovery.
 
 ---
 
-## Fetch Orders
+# 📈 Current Project Progress
 
-```
-GET http://localhost:8080/orders/core
-```
+## Backend
 
----
-
-# ✅ Completed
-
-- ✔ Spring Boot Microservices
-- ✔ PostgreSQL Integration
-- ✔ REST APIs
-- ✔ Spring Data JPA
-- ✔ OpenFeign
-- ✔ Netflix Eureka
-- ✔ Spring Cloud Gateway
-- ✔ Spring Cloud LoadBalancer
-- ✔ Resilience4j Circuit Breaker
-- ✔ DTO Mapping
-- ✔ Automatic Database Initialization
-- ✔ End-to-End Request Routing
+- ✅ Spring Boot
+- ✅ Java 21
+- ✅ PostgreSQL
+- ✅ JPA
+- ✅ Hibernate
 
 ---
 
-# 🚧 Upcoming Features
+## Microservices
 
-## Authentication
-
-- [ ] Spring Security
-- [ ] JWT Authentication
-- [ ] Refresh Tokens
-- [ ] Role Based Authorization
+- ✅ Order Service
+- ✅ Inventory Service
+- ✅ OpenFeign
 
 ---
 
-## Configuration
+## Spring Cloud
 
-- [ ] Spring Cloud Config Server
-- [ ] Centralized Configuration
-
----
-
-## Monitoring
-
-- [ ] Spring Boot Actuator
-- [ ] Prometheus
-- [ ] Grafana
+- ✅ Eureka
+- ✅ API Gateway
+- ✅ Load Balancer
 
 ---
 
-## Distributed Tracing
+## Gateway
 
-- [ ] Micrometer Tracing
-- [ ] Zipkin
-
----
-
-## Messaging
-
-- [ ] Apache Kafka
-- [ ] Event-Driven Communication
+- ✅ Global Logging Filter
+- ✅ Route Logging Filter
+- ✅ Authentication Gateway Filter
+- ✅ JWT Infrastructure
 
 ---
 
-## Caching
+## Reliability
 
-- [ ] Redis
-
----
-
-## Containerization
-
-- [ ] Docker
-- [ ] Docker Compose
+- ✅ Resilience4j Setup
 
 ---
 
-## Deployment
+## Testing
 
-- [ ] Kubernetes
-- [ ] AWS EC2
-- [ ] AWS RDS
-- [ ] Nginx Reverse Proxy
-
----
-
-## DevOps
-
-- [ ] GitHub Actions CI/CD
+- ✅ Postman
+- ✅ End-to-End Request Flow
+- ✅ Gateway Routing
+- ✅ Service Discovery
 
 ---
 
-# 🎯 Learning Outcomes
+# 🎯 What This Project Demonstrates
 
-- Spring Boot Microservices
-- REST APIs
+This project demonstrates practical knowledge of
+
+- Enterprise Java Development
+- Spring Boot
 - Spring Cloud
+- Distributed Systems
+- RESTful APIs
 - API Gateway
+- Gateway Filters
 - Netflix Eureka
 - Service Discovery
 - OpenFeign
-- Client-side Load Balancing
-- Circuit Breaker Pattern
+- Load Balancing
 - DTO Design
 - Layered Architecture
 - PostgreSQL
+- JWT Basics
+- Circuit Breaker Design
+- Production-inspired Backend Architecture
+# 🐳 Docker (Upcoming)
+
+The project is designed to be containerized using Docker.
+
+Planned Docker Images
+
+- API Gateway
+- Discovery Service
+- Order Service
+- Inventory Service
+- PostgreSQL
+
+Future Architecture
+
+```text
+Docker Network
+
+│
+
+├── API Gateway
+
+├── Eureka Server
+
+├── Inventory Service
+
+├── Order Service
+
+├── PostgreSQL (Inventory)
+
+└── PostgreSQL (Order)
+```
+
+Upcoming
+
+- Dockerfiles
+- Docker Compose
+- Multi Container Deployment
+
+---
+
+# ☸️ Kubernetes (Upcoming)
+
+The application will be deployed using Kubernetes.
+
+Planned Components
+
+- Deployment
+- Service
+- ConfigMap
+- Secret
+- Ingress
+- Horizontal Pod Autoscaler
+
+Architecture
+
+```text
+Internet
+
+↓
+
+Ingress
+
+↓
+
+API Gateway
+
+↓
+
+Microservices
+
+↓
+
+PostgreSQL
+```
+
+---
+
+# ☁️ AWS Deployment (Upcoming)
+
+Target AWS Services
+
+- Amazon EC2
+- Amazon RDS
+- Elastic Load Balancer
+- Auto Scaling
+- IAM
+- CloudWatch
+
+Deployment Pipeline
+
+```text
+GitHub
+
+↓
+
+GitHub Actions
+
+↓
+
+Docker Build
+
+↓
+
+AWS EC2
+
+↓
+
+Running Containers
+```
+
+---
+
+# 📈 Monitoring (Upcoming)
+
+Monitoring Stack
+
+- Spring Boot Actuator
+- Prometheus
+- Grafana
+
+Metrics
+
+- CPU Usage
+- Memory Usage
+- API Response Time
+- Request Count
+- JVM Metrics
+- Database Connections
+
+---
+
+# 🔍 Distributed Tracing (Upcoming)
+
+Tracing Stack
+
+- Micrometer
+- Zipkin
+
+Benefits
+
+- Request Tracking
+- Performance Monitoring
+- Debugging
+- Latency Analysis
+
+Flow
+
+```text
+Gateway
+
+↓
+
+Order Service
+
+↓
+
+Inventory Service
+
+↓
+
+Database
+```
+
+---
+
+# 📨 Event Driven Architecture (Upcoming)
+
+Apache Kafka will be used for asynchronous communication.
+
+Future Services
+
+- Notification Service
+- Payment Service
+- Email Service
+
+Example
+
+```text
+Order Created
+
+↓
+
+Kafka
+
+↓
+
+Notification Service
+
+↓
+
+Email Sent
+```
+
+---
+
+# ⚡ Caching (Upcoming)
+
+Redis will be integrated for
+
+- Product Cache
+- Frequently Accessed Data
+- Session Storage
+- API Response Caching
+
+Benefits
+
+- Faster APIs
+- Reduced Database Load
+- Better Scalability
+
+---
+
+# 🔐 Security Roadmap
+
+Upcoming Features
+
+- Spring Security
+- JWT Authentication
+- Refresh Token
+- Role Based Authorization
+- API Key Authentication
+- Password Encryption
+- CSRF Protection
+- CORS Configuration
+
+Authentication Flow
+
+```text
+Client
+
+↓
+
+Login
+
+↓
+
+Authentication Service
+
+↓
+
+JWT Generation
+
+↓
+
+Gateway Validation
+
+↓
+
+Microservice
+```
+
+---
+
+# ⚙️ CI/CD Pipeline (Upcoming)
+
+GitHub Actions will automate
+
+- Build
+- Test
+- Package
+- Docker Build
+- Deployment
+
+Pipeline
+
+```text
+Developer
+
+↓
+
+Git Push
+
+↓
+
+GitHub Actions
+
+↓
+
+Run Tests
+
+↓
+
+Build Jar
+
+↓
+
+Build Docker Image
+
+↓
+
+Deploy
+```
+
+---
+
+# 📚 Learning Outcomes
+
+This project helped in understanding
+
+### Spring Boot
+
+- REST APIs
+- Spring Data JPA
+- Hibernate
+- DTO Pattern
+- Dependency Injection
+
+---
+
+### Spring Cloud
+
+- API Gateway
+- Netflix Eureka
+- OpenFeign
+- Load Balancer
+- Gateway Filters
+- Authentication Filters
+
+---
+
+### Backend Engineering
+
+- Microservices Architecture
+- Distributed Systems
+- Layered Architecture
+- Repository Pattern
+- Service Pattern
+- Database Design
+
+---
+
+### Production Concepts
+
+- JWT Infrastructure
+- Circuit Breaker
+- Centralized Routing
+- Service Discovery
+- Logging
+- Monitoring
+- Scalability
+
+---
+
+# 🚀 Future Scope
+
+The project will continue evolving with
+
+- Authentication Service
+- User Service
+- Product Service
+- Cart Service
+- Payment Service
+- Notification Service
+- Config Server
+- Kafka
+- Redis
+- Docker
+- Kubernetes
+- AWS
+- GitHub Actions
+- Prometheus
+- Grafana
+- Zipkin
+- ELK Stack
+- Distributed Tracing
+- OAuth2
+- Spring Authorization Server
+
+---
+
+# 🏆 Resume Highlights
+
+This project demonstrates practical knowledge of
+
+- Java 21
+- Spring Boot
+- Spring Cloud
+- API Gateway
+- Netflix Eureka
+- OpenFeign
+- PostgreSQL
 - JPA & Hibernate
-- Distributed System Basics
+- Resilience4j
+- JWT Infrastructure
+- Gateway Filters
+- Distributed Systems
+- RESTful APIs
+- Layered Architecture
+- Enterprise Backend Development
+
+---
+
+# 📸 Screenshots
+
+You can include screenshots of
+
+- Eureka Dashboard
+- API Gateway Logs
+- Order Creation
+- Inventory APIs
+- PostgreSQL Tables
+- Postman Collection
+- Gateway Routing
+- Filters Execution
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+If you'd like to improve this project
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push the branch
+5. Open a Pull Request
+
+---
+
+# 📄 License
+
+This project is created for learning purposes.
+
+You are free to fork and use it for educational purposes.
 
 ---
 
 # 👨‍💻 Author
 
-**Vishal Singh**
+## Vishal Singh
 
-🎓 B.Tech CSE (2027)
+Backend Developer | Java | Spring Boot | Spring Cloud
 
-🔗 GitHub: https://github.com/VISHAL55UIET
+🎓 B.Tech Computer Science & Engineering (2027)
 
-🔗 LinkedIn: https://www.linkedin.com/in/vishal-singh-5b052828a/
+### Connect with me
+
+**GitHub**
+
+https://github.com/VISHAL55UIET
+
+**LinkedIn**
+
+https://www.linkedin.com/in/vishal-singh-5b052828a/
 
 ---
 
-⭐ If you found this project useful, please consider giving it a Star.
+# ⭐ Support
+
+If you found this project helpful,
+
+⭐ Star the repository
+
+🍴 Fork it
+
+📢 Share it
+
+---
+
+# 💡 Final Note
+
+This repository is not intended to be just another CRUD application.
+
+The goal of this project is to learn and implement real-world backend engineering concepts including microservices, distributed systems, API Gateway, service discovery, resilience patterns, authentication, observability, containerization, orchestration, and cloud deployment.
+
+The project will continue evolving with production-grade features to better reflect modern enterprise backend architecture.
+
+---
+
+<div align="center">
+
+## ⭐ Thanks for visiting ⭐
+
+### Happy Coding 🚀
+
+Made with ❤️ by Vishal Singh
+
+</div>
+
+---
