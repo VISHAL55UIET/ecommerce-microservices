@@ -1,28 +1,33 @@
 # 🛒 E-Commerce Microservices Backend
 
-A production-inspired E-Commerce Backend built using **Spring Boot Microservices**, demonstrating service-to-service communication using **OpenFeign**, relational database management with **PostgreSQL**, and a scalable microservices architecture.
+A production-inspired **Spring Boot Microservices** application demonstrating enterprise backend architecture using **Spring Cloud**, **Netflix Eureka**, **Spring Cloud Gateway**, **OpenFeign**, **Resilience4j**, and **PostgreSQL**.
 
-> 🚀 Built as a learning project to understand real-world backend architecture, distributed systems, and enterprise Java development.
+The project simulates an E-Commerce platform where multiple independent microservices communicate with each other through service discovery and API Gateway.
+
+> 🚀 Built to learn real-world distributed systems, scalable backend architecture, and production-ready Spring Boot development.
 
 ---
 
-## 📌 Features
+# ✨ Features
 
 - ✅ Microservices Architecture
+- ✅ Spring Cloud Gateway
+- ✅ Netflix Eureka Service Discovery
+- ✅ Spring Cloud LoadBalancer
+- ✅ OpenFeign Inter-Service Communication
+- ✅ Resilience4j Circuit Breaker
 - ✅ Order Service
 - ✅ Inventory Service
-- ✅ RESTful APIs
-- ✅ OpenFeign Inter-Service Communication
+- ✅ REST APIs
 - ✅ Spring Data JPA
-- ✅ PostgreSQL Integration
-- ✅ DTO Mapping using ModelMapper
+- ✅ Hibernate ORM
+- ✅ PostgreSQL
+- ✅ DTO Mapping
+- ✅ ModelMapper
 - ✅ Layered Architecture
-- ✅ Centralized Business Logic
-- ✅ Automatic Database Initialization using data.sql
+- ✅ Automatic Database Initialization
 - ✅ Inventory Stock Management
 - ✅ Total Price Calculation
-- ✅ Order Persistence
-- ✅ Exception Handling
 - ✅ Maven Multi-Service Setup
 
 ---
@@ -30,38 +35,43 @@ A production-inspired E-Commerce Backend built using **Spring Boot Microservices
 # 🏗️ Architecture
 
 ```text
-                   Client
-                      │
-                      ▼
-          POST /orders/core/create-order
-                      │
-                      ▼
-              Order Service
-                      │
-         OpenFeign HTTP Client
-                      │
-                      ▼
-            Inventory Service
-                      │
-         Reduce Product Stocks
-         Calculate Total Price
-                      │
-                      ▼
-              PostgreSQL Database
+                           Client
+                              │
+                              ▼
+                   Spring Cloud Gateway
+                              │
+                              ▼
+                    Eureka Discovery Server
+                              │
+                ┌─────────────┴─────────────┐
+                ▼                           ▼
+         Order Service               Inventory Service
+                │                           │
+                │      OpenFeign            │
+                └────────────►──────────────┘
+                              │
+                    Spring Cloud LoadBalancer
+                              │
+                    PostgreSQL Databases
 ```
 
 ---
 
 # 🛠️ Tech Stack
 
-| Technology | Usage |
-|------------|-------|
+| Technology | Purpose |
+|------------|---------|
 | Java 21 | Programming Language |
-| Spring Boot 3 | Backend Framework |
+| Spring Boot 3.5 | Backend Framework |
+| Spring Cloud | Microservices |
+| Spring Cloud Gateway | API Gateway |
+| Netflix Eureka | Service Discovery |
+| OpenFeign | Inter-Service Communication |
+| Spring Cloud LoadBalancer | Client-side Load Balancing |
+| Resilience4j | Circuit Breaker |
 | Spring Data JPA | ORM |
-| Spring Cloud OpenFeign | Inter-service Communication |
-| PostgreSQL | Database |
 | Hibernate | ORM Implementation |
+| PostgreSQL | Database |
 | Maven | Dependency Management |
 | ModelMapper | DTO Mapping |
 | Lombok | Boilerplate Reduction |
@@ -71,42 +81,79 @@ A production-inspired E-Commerce Backend built using **Spring Boot Microservices
 
 # 📂 Project Structure
 
-```
+```text
 ecommerce-microservices
 │
+├── api-gateway
+│
+├── discovery-service
+│
 ├── inventory-service
-│     ├── Controller
-│     ├── Service
-│     ├── Repository
-│     ├── DTO
-│     ├── Entity
-│     └── Client
 │
 ├── order-service
-│     ├── Controller
-│     ├── Service
-│     ├── Repository
-│     ├── DTO
-│     ├── Entity
-│     └── Client
 │
 └── README.md
 ```
 
 ---
 
-# 🚀 Services
+# 🚀 Microservices
+
+## 🌐 API Gateway
+
+### Responsibilities
+
+- Centralized Routing
+- Single Entry Point
+- Load Balancing
+- Service Discovery Integration
+
+Port
+
+```
+8080
+```
+
+---
+
+## 🔍 Discovery Service
+
+### Responsibilities
+
+- Service Registry
+- Service Discovery
+- Dynamic Instance Registration
+
+Port
+
+```
+8761
+```
+
+Dashboard
+
+```
+http://localhost:8761
+```
+
+---
 
 ## 📦 Inventory Service
 
 ### Responsibilities
 
-- Manage Products
-- Manage Inventory
+- Product Management
+- Inventory Management
 - Reduce Product Stocks
-- Calculate Total Order Price
+- Calculate Total Price
 
-### Endpoints
+Port
+
+```
+9010
+```
+
+Endpoints
 
 | Method | Endpoint |
 |---------|----------|
@@ -123,10 +170,16 @@ ecommerce-microservices
 
 - Create Orders
 - Persist Orders
-- Call Inventory Service using OpenFeign
+- Call Inventory Service
 - Store Order Details
 
-### Endpoints
+Port
+
+```
+9020
+```
+
+Endpoints
 
 | Method | Endpoint |
 |---------|----------|
@@ -137,10 +190,18 @@ ecommerce-microservices
 
 ---
 
-# 🔄 Microservice Communication
+# 🔄 Request Flow
 
-```
+```text
 Client
+
+↓
+
+Spring Cloud Gateway
+
+↓
+
+Eureka Discovery Server
 
 ↓
 
@@ -152,6 +213,10 @@ OpenFeign Client
 
 ↓
 
+LoadBalancer
+
+↓
+
 Inventory Service
 
 ↓
@@ -160,7 +225,7 @@ Reduce Stocks
 
 ↓
 
-Calculate Price
+Calculate Total Price
 
 ↓
 
@@ -168,11 +233,15 @@ Return Total Price
 
 ↓
 
-Save Order
+Persist Order
 
 ↓
 
-Response
+Gateway
+
+↓
+
+Client
 ```
 
 ---
@@ -238,108 +307,96 @@ inventoryDB
 orderDB
 ```
 
-Update
+Update the database credentials inside
 
 ```
 application.properties
 ```
 
-with your database credentials.
+---
+
+# ▶️ Run Services
+
+Start the services in the following order:
+
+1. Discovery Service
+2. Inventory Service
+3. Order Service
+4. API Gateway
 
 ---
 
-## Run Services
+# 🌐 Service URLs
 
-### Start Order Service
+| Service | URL |
+|----------|-----|
+| Eureka Dashboard | http://localhost:8761 |
+| API Gateway | http://localhost:8080 |
+| Inventory Service | http://localhost:9010 |
+| Order Service | http://localhost:9020 |
+
+---
+
+# 📸 Testing
+
+## Fetch Products
 
 ```
-localhost:9020
-```
-
-### Start Inventory Service
-
-```
-localhost:9010
+GET http://localhost:8080/api/v1/products
 ```
 
 ---
 
-# 📸 Working Flow
+## Create Order
 
-✔ Client sends Order Request
-
-↓
-
-✔ Order Service receives request
-
-↓
-
-✔ OpenFeign calls Inventory Service
-
-↓
-
-✔ Inventory Service validates stock
-
-↓
-
-✔ Inventory Service reduces stock
-
-↓
-
-✔ Inventory Service calculates total price
-
-↓
-
-✔ Order Service stores order
-
-↓
-
-✔ Success Response returned
+```
+POST http://localhost:8080/orders/core/create-order
+```
 
 ---
 
-# 🎯 Learning Outcomes
+## Fetch Orders
 
-This project helped in understanding
+```
+GET http://localhost:8080/orders/core
+```
 
-- Microservices Architecture
-- Distributed Communication
-- OpenFeign
-- DTO Design
-- Layered Architecture
-- REST APIs
-- Spring Boot
-- JPA
-- PostgreSQL
-- Maven Dependency Management
-- Inter-Service Communication
+---
+
+# ✅ Completed
+
+- ✔ Spring Boot Microservices
+- ✔ PostgreSQL Integration
+- ✔ REST APIs
+- ✔ Spring Data JPA
+- ✔ OpenFeign
+- ✔ Netflix Eureka
+- ✔ Spring Cloud Gateway
+- ✔ Spring Cloud LoadBalancer
+- ✔ Resilience4j Circuit Breaker
+- ✔ DTO Mapping
+- ✔ Automatic Database Initialization
+- ✔ End-to-End Request Routing
 
 ---
 
 # 🚧 Upcoming Features
 
-## Service Discovery
-
-- [ ] Netflix Eureka Server
-- [ ] Eureka Client Registration
-
-## API Gateway
-
-- [ ] Spring Cloud Gateway
-- [ ] Centralized Routing
-
-## Security
+## Authentication
 
 - [ ] Spring Security
 - [ ] JWT Authentication
+- [ ] Refresh Tokens
 - [ ] Role Based Authorization
 
-## Resilience
+---
 
-- [ ] Circuit Breaker
-- [ ] Retry
-- [ ] Rate Limiter
-- [ ] Bulkhead
+## Configuration
+
+- [ ] Spring Cloud Config Server
+- [ ] Centralized Configuration
+
+---
 
 ## Monitoring
 
@@ -347,43 +404,66 @@ This project helped in understanding
 - [ ] Prometheus
 - [ ] Grafana
 
+---
+
 ## Distributed Tracing
 
-- [ ] Zipkin
 - [ ] Micrometer Tracing
+- [ ] Zipkin
+
+---
 
 ## Messaging
 
 - [ ] Apache Kafka
-- [ ] Event Driven Communication
+- [ ] Event-Driven Communication
+
+---
+
+## Caching
+
+- [ ] Redis
+
+---
 
 ## Containerization
 
 - [ ] Docker
 - [ ] Docker Compose
 
+---
+
 ## Deployment
 
 - [ ] Kubernetes
-- [ ] AWS Deployment
+- [ ] AWS EC2
+- [ ] AWS RDS
+- [ ] Nginx Reverse Proxy
 
 ---
 
-# ⭐ Future Scope
+## DevOps
 
-- Payment Service
-- Notification Service
-- User Service
-- Authentication Service
-- Product Service
-- Cart Service
+- [ ] GitHub Actions CI/CD
+
+---
+
+# 🎯 Learning Outcomes
+
+- Spring Boot Microservices
+- REST APIs
+- Spring Cloud
 - API Gateway
-- Config Server
-- Eureka Service Registry
-- Kafka Event Streaming
-- Docker Deployment
-- Kubernetes Deployment
-- CI/CD using GitHub Actions
+- Netflix Eureka
+- Service Discovery
+- OpenFeign
+- Client-side Load Balancing
+- Circuit Breaker Pattern
+- DTO Design
+- Layered Architecture
+- PostgreSQL
+- JPA & Hibernate
+- Distributed System Basics
 
 ---
 
@@ -391,9 +471,12 @@ This project helped in understanding
 
 **Vishal Singh**
 
-- GitHub: https://github.com/VISHAL55UIET
-- LinkedIn: https://www.linkedin.com/in/vishal-singh-5b052828a/
+🎓 B.Tech CSE (2027)
+
+🔗 GitHub: https://github.com/VISHAL55UIET
+
+🔗 LinkedIn: https://www.linkedin.com/in/vishal-singh-5b052828a/
 
 ---
 
-If you found this project useful, don't forget to ⭐ the repository.
+⭐ If you found this project useful, please consider giving it a Star.
