@@ -1481,6 +1481,175 @@ This project helped in understanding
 - Scalability
 
 ---
+---
+
+# 🔭 Observability
+
+Modern distributed systems require more than just REST APIs and databases. To improve debugging, monitoring, and request visibility, this project incorporates production-inspired observability components.
+
+## ✅ Implemented
+
+- Micrometer Tracing
+- Distributed Tracing with Zipkin
+- ELK Stack Infrastructure
+- Docker-based Observability Setup
+- Structured Logging Support
+- Trace ID & Span ID Propagation
+
+---
+
+# 🔍 Distributed Tracing with Zipkin
+
+The project uses **Micrometer Tracing** together with **Zipkin** to trace requests across multiple microservices.
+
+Instead of treating each service independently, every request carries a **Trace ID**, allowing the complete lifecycle of a request to be tracked from the API Gateway to downstream services.
+
+### Request Flow
+
+```text
+Client
+   │
+   ▼
+API Gateway
+   │
+   ▼
+Order Service
+   │
+   ▼
+Inventory Service
+   │
+   ▼
+PostgreSQL
+```
+
+### Benefits
+
+- End-to-End Request Tracking
+- Cross-Service Debugging
+- Performance Monitoring
+- Latency Analysis
+- Trace Correlation Across Services
+
+---
+
+# 📊 Centralized Logging (ELK Stack)
+
+To support centralized logging in a distributed architecture, the project uses the **ELK Stack**.
+
+### ELK Components
+
+| Component | Responsibility |
+|-----------|----------------|
+| Elasticsearch | Stores and indexes application logs |
+| Logstash | Collects and processes log events |
+| Kibana | Visualizes and searches logs |
+
+---
+
+## Logging Architecture
+
+```text
+API Gateway
+      │
+Order Service
+      │
+Inventory Service
+      │
+      ▼
+ Structured Logging
+      │
+      ▼
+   Logstash
+      │
+      ▼
+ Elasticsearch
+      │
+      ▼
+    Kibana
+```
+
+### Features
+
+- Centralized Log Aggregation
+- Structured JSON Logging
+- Service-wise Log Monitoring
+- Faster Production Debugging
+- Searchable Log History
+- Trace ID Correlation
+
+---
+
+# 🐳 Observability Infrastructure
+
+All observability services are containerized using **Docker**.
+
+| Component | Port |
+|-----------|------|
+| Elasticsearch | 9200 |
+| Kibana | 5601 |
+| Logstash | 9600 |
+| Zipkin | 9411 |
+
+---
+
+# 📈 Monitoring Architecture
+
+```text
+                    Client
+                       │
+                       ▼
+                 API Gateway
+                       │
+         ┌─────────────┴─────────────┐
+         ▼                           ▼
+ Order Service                Inventory Service
+         │                           │
+         └────────── OpenFeign ──────┘
+                       │
+                  PostgreSQL
+
+──────────────────────────────────────────────
+
+           Observability Layer
+
+Micrometer ─────────────► Zipkin
+
+Structured Logs ────────► Logstash
+
+Logstash ───────────────► Elasticsearch
+
+Elasticsearch ─────────► Kibana
+```
+
+---
+
+# 🚀 Current Observability Status
+
+| Feature | Status |
+|---------|--------|
+| Micrometer Tracing | ✅ Implemented |
+| Distributed Tracing (Zipkin) | ✅ Implemented |
+| ELK Docker Infrastructure | ✅ Implemented |
+| Elasticsearch | ✅ Running |
+| Kibana | ✅ Running |
+| Logstash | ✅ Running |
+| Structured Logback Logging | 🚧 In Progress |
+| Spring Boot → Logstash Integration | 🚧 In Progress |
+
+---
+
+# 🎯 Learning Outcome
+
+Through this implementation, the project demonstrates practical understanding of:
+
+- Distributed Tracing
+- Request Correlation
+- Enterprise Observability
+- Dockerized Infrastructure
+- Centralized Logging Architecture
+- Production-Style Monitoring Foundations
+- Spring Boot Logging Ecosystem
+- Debugging Distributed Microservices
 
 # 🚀 Future Scope
 
